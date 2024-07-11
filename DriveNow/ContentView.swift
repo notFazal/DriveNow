@@ -16,7 +16,7 @@ struct ContentView: View {
     @StateObject private var sideMenuState = SideMenuState()
     @State private var selectedTab: Tab = .house
     @StateObject var dataManager = DataManager()
-
+    
     var body: some View {
         Group {
             if isSignedIn {

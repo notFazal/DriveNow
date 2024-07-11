@@ -2,9 +2,10 @@ import SwiftUI
 
 struct TimeClockView: View {
     @EnvironmentObject var sideMenuState: SideMenuState
+    @Binding var isTimeClockViewPresented: Bool
     @State private var isSearching = false  // Not used, but necessary for binding
     @State private var searchText = ""
-    
+
     @State private var timeEntries: [TimeEntry] = [
         TimeEntry(type: .clockIn, time: "0:00 pm"),
         TimeEntry(type: .mealStart, time: "0:00 pm"),
@@ -13,13 +14,13 @@ struct TimeClockView: View {
     ]
     @State private var currentPhase: TimeEntryType = .clockIn
     @State private var currentTime: String = Date().formattedTime
-    
+
     var body: some View {
         VStack {
             TopBarView(
                 title: "Drive Now",
                 leftIconName: "arrow.backward",
-                leftButtonAction: { /* Add navigation back action */ },
+                leftButtonAction: { isTimeClockViewPresented = false },  // Set back action
                 rightIconName: nil,
                 rightButtonAction: nil,
                 showSearchBar: false,
@@ -27,7 +28,7 @@ struct TimeClockView: View {
                 searchText: $searchText
             )
             .background(Color.black)
-            
+
             VStack {
                 // Centered Drive Now Time and current time
                 VStack {
@@ -80,11 +81,11 @@ struct TimeClockView: View {
         .background(Color.black)
         .environmentObject(sideMenuState)
     }
-    
+
     private func handleClockAction() {
         let newTimeEntry = TimeEntry(type: currentPhase, time: Date().formattedTime)
         timeEntries.append(newTimeEntry)
-        
+
         switch currentPhase {
         case .clockIn:
             currentPhase = .mealStart
@@ -95,7 +96,7 @@ struct TimeClockView: View {
         case .clockOut:
             currentPhase = .clockIn
         }
-        
+
         currentTime = Date().formattedTime
     }
 }
@@ -146,7 +147,7 @@ struct TimeEntry: Identifiable {
 
 enum TimeEntryType {
     case clockIn, mealStart, mealEnd, clockOut
-    
+
     var buttonText: String {
         switch self {
         case .clockIn:
@@ -170,6 +171,6 @@ extension Date {
 }
 
 #Preview {
-    TimeClockView()
+    TimeClockView(isTimeClockViewPresented: .constant(true))
         .environmentObject(SideMenuState())
 }

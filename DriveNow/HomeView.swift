@@ -5,9 +5,9 @@ struct HomeView: View {
     @State private var isSearching = false  // Not used, but necessary for binding
     @State private var searchText = ""
     @State private var showTimeClockView = false  // State to manage the navigation
-    
+
     var firstName: String = "Fazal"
-    
+
     var body: some View {
         ZStack(alignment: .topLeading) {
             Color.black.edgesIgnoringSafeArea(.all)
@@ -20,7 +20,7 @@ struct HomeView: View {
                         .foregroundColor(.white)
                         .padding(.top, 50)
                         .padding(.horizontal, 5)
-                    
+
                     // Current status card
                     CardView(
                         iconName: "clock.fill",
@@ -40,7 +40,7 @@ struct HomeView: View {
                 }
                 .padding()
             }
-            
+
             TopBarView(
                 title: "Drive Now",
                 leftIconName: "line.3.horizontal",
@@ -55,7 +55,7 @@ struct HomeView: View {
             )
         }
         .fullScreenCover(isPresented: $showTimeClockView) {
-            TimeClockView()  // Present the TimeClockView
+            TimeClockView(isTimeClockViewPresented: $showTimeClockView)  // Present the TimeClockView with binding
                 .environmentObject(sideMenuState)
         }
     }
@@ -68,7 +68,7 @@ struct CardView: View {
     var detail: String
     var linkText: String
     var action: () -> Void  // Add an action parameter
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
@@ -81,13 +81,13 @@ struct CardView: View {
                     .font(.title3)
                 Spacer()
             }
-            
+
             Text(detail)
                 .font(.headline)
                 .foregroundColor(.gray)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            
+
             Button(action: action) {  // Use the action parameter
                 Text(linkText)
                     .foregroundColor(.red)
